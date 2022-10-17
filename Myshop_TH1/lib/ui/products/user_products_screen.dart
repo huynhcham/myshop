@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'user_product_list_tile.dart';
 import 'products_manager.dart';
 import '../shared/app_drawer.dart';
 
 class UserProductsScreen extends StatelessWidget {
-  static const routeName = '/user-products';
+  static const routeName = '/product-detail';
   const UserProductsScreen({super.key});
 
   @override
@@ -20,6 +20,7 @@ class UserProductsScreen extends StatelessWidget {
       ),
       drawer: const AppDrawer(),
       body: RefreshIndicator(
+        // ignore: avoid_print
         onRefresh: () async => print('refresh products'),
         child: buildUserProductListView(productsManager),
       ),
@@ -27,25 +28,29 @@ class UserProductsScreen extends StatelessWidget {
   }
 
   Widget buildUserProductListView(ProductsManager productsManager) {
-    return ListView.builder(
-      itemCount: productsManager.itemCount,
-      itemBuilder: (ctx, i) => Column(
-        children: [
-          UserProductListTile(
-            productsManager.items[i],
+    return Consumer<ProductsManager>(
+      builder: (ctx, productsManager, child) {
+        return ListView.builder(
+          itemCount: productsManager.itemCount,
+          itemBuilder: (ctx, i) => Column(
+            children: [
+              UserProductListTile(
+                productsManager.items[i],
+              ),
+              const Divider(),
+            ],
           ),
-          const Divider(),
-        ],
-      ),
+        );
+      },
     );
   }
 
   Widget buildAddButton() {
     return IconButton(
-      icon: const Icon(Icons.add),
-      onPressed: () {
-        print('Go to edit product screen');
-      },
-    );
+        onPressed: () {
+          // ignore: avoid_print
+          print('Go to add product screen');
+        },
+        icon: const Icon(Icons.add));
   }
 }
